@@ -31,9 +31,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private array $roles = [];
 
     #[ORM\Column]
+    #[Groups(['user:write'])]
     private ?string $password = null;
 
     #[ORM\OneToOne(inversedBy: 'user', targetEntity: Person::class)]
+    #[Groups(['user:read', 'user:write'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Person $person = null;
 
@@ -97,16 +99,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPerson(Person $person): static
     {
         $this->person = $person;
-
-        // Attribution automatique des rôles selon le type de personne
-        if ($person->isNoyau()) {
-            $this->roles = ['ROLE_NOYAU'];
-        } elseif ($person->isDecanal()) {
-            $this->roles = ['ROLE_DECANAL'];
-        } elseif ($person->isDicoces()) {
-            $this->roles = ['ROLE_DIOCESE'];
-        }
-
         return $this;
     }
 }

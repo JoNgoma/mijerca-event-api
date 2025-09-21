@@ -51,7 +51,7 @@ class Doyenne
 
     #[ORM\OneToMany(mappedBy: 'doyenne', targetEntity: Person::class, cascade: ['persist', 'remove'])]
     #[Groups(['doyenne:read'])]
-    private Collection $people;
+    private Collection $person;
 
     #[ORM\ManyToOne(inversedBy: 'doyennes')]
     #[ORM\JoinColumn(nullable: false)]
@@ -61,7 +61,7 @@ class Doyenne
     public function __construct()
     {
         $this->paroisses = new ArrayCollection();
-        $this->people = new ArrayCollection();
+        $this->person = new ArrayCollection();
     }
 
     // --- Getters & Setters ---
@@ -134,20 +134,20 @@ class Doyenne
         return $this;
     }
 
-    // --- People ---
+    // --- Person ---
 
     /**
      * @return Collection<int, Person>
      */
-    public function getPeople(): Collection
+    public function getPerson(): Collection
     {
-        return $this->people;
+        return $this->person;
     }
 
     public function addPerson(Person $person): static
     {
-        if (!$this->people->contains($person)) {
-            $this->people->add($person);
+        if (!$this->person->contains($person)) {
+            $this->person->add($person);
             $person->setDoyenne($this);
         }
         return $this;
@@ -155,7 +155,7 @@ class Doyenne
 
     public function removePerson(Person $person): static
     {
-        if ($this->people->removeElement($person)) {
+        if ($this->person->removeElement($person)) {
             if ($person->getDoyenne() === $this) {
                 $person->setDoyenne(null);
             }

@@ -24,9 +24,9 @@ class DoyenneFixtures extends Fixture implements DependentFixtureInterface
         }
 
         $doyennesData = [
-            ['name' => 'Saint Noé Mawaggali', 'sector' => $kinEst],
+            ['name' => 'Saint Noé Mawaggali', 'sector' => $kinOuest],
             ['name' => 'Saint Raphaël', 'sector' => $kinCentre],
-            ['name' => 'Saint Joseph', 'sector' => $kinOuest],
+            ['name' => 'Saint Joseph', 'sector' => $kinCentre],
         ];
 
         foreach ($doyennesData as $data) {

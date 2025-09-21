@@ -32,10 +32,10 @@ class ParoisseFixtures extends Fixture implements DependentFixtureInterface
 
         // 🔹 Paroisses prédéfinies
         $paroissesData = [
-            ['name' => 'Paroisse Saint Noé Mawaggali', 'doyenne' => $doyenneNoe, 'sector' => $kinEst],
+            ['name' => 'Paroisse Saint Noé Mawaggali', 'doyenne' => $doyenneNoe, 'sector' => $kinOuest],
             ['name' => 'Paroisse Saint Raphaël', 'doyenne' => $doyenneRaphael, 'sector' => $kinCentre],
-            ['name' => 'Paroisse Saint Joseph', 'doyenne' => $doyenneJoseph, 'sector' => $kinOuest],
-            ['name' => 'Paroisse Saint François Xavier', 'doyenne' => $doyenneJoseph, 'sector' => $kinOuest],
+            ['name' => 'Paroisse Saint Joseph', 'doyenne' => $doyenneJoseph, 'sector' => $kinCentre],
+            ['name' => 'Paroisse Saint François Xavier', 'doyenne' => $doyenneJoseph, 'sector' => $kinCentre],
         ];
 
         foreach ($paroissesData as $data) {

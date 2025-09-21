@@ -37,18 +37,21 @@ class Sector
     private ?string $name = null;
 
     #[ORM\OneToMany(mappedBy: 'sector', targetEntity: Doyenne::class)]
-    private Collection $doyenne;
+    #[Groups(['sector:read'])]
+    private Collection $doyennes;
 
     #[ORM\OneToMany(mappedBy: 'sector', targetEntity: Paroisse::class)]
-    private Collection $paroisse;
+    #[Groups(['sector:read'])]
+    private Collection $paroisses;
 
     #[ORM\OneToMany(mappedBy: 'sector', targetEntity: Person::class)]
+    #[Groups(['sector:read'])]
     private Collection $person;
 
     public function __construct()
     {
-        $this->doyenne = new ArrayCollection();
-        $this->paroisse = new ArrayCollection();
+        $this->doyennes = new ArrayCollection();
+        $this->paroisses = new ArrayCollection();
         $this->person = new ArrayCollection();
     }
 
@@ -70,13 +73,13 @@ class Sector
 
     public function getDoyenne(): Collection
     {
-        return $this->doyenne;
+        return $this->doyennes;
     }
 
     public function addDoyenne(Doyenne $doyenne): static
     {
-        if (!$this->doyenne->contains($doyenne)) {
-            $this->doyenne->add($doyenne);
+        if (!$this->doyennes->contains($doyenne)) {
+            $this->doyennes->add($doyenne);
             $doyenne->setSector($this);
         }
         return $this;
@@ -84,7 +87,7 @@ class Sector
 
     public function removeDoyenne(Doyenne $doyenne): static
     {
-        if ($this->doyenne->removeElement($doyenne) && $doyenne->getSector() === $this) {
+        if ($this->doyennes->removeElement($doyenne) && $doyenne->getSector() === $this) {
             $doyenne->setSector(null);
         }
         return $this;
@@ -92,13 +95,13 @@ class Sector
 
     public function getParoisse(): Collection
     {
-        return $this->paroisse;
+        return $this->paroisses;
     }
 
     public function addParoisse(Paroisse $paroisse): static
     {
-        if (!$this->paroisse->contains($paroisse)) {
-            $this->paroisse->add($paroisse);
+        if (!$this->paroisses->contains($paroisse)) {
+            $this->paroisses->add($paroisse);
             $paroisse->setSector($this);
         }
         return $this;
@@ -106,7 +109,7 @@ class Sector
 
     public function removeParoisse(Paroisse $paroisse): static
     {
-        if ($this->paroisse->removeElement($paroisse) && $paroisse->getSector() === $this) {
+        if ($this->paroisses->removeElement($paroisse) && $paroisse->getSector() === $this) {
             $paroisse->setSector(null);
         }
         return $this;

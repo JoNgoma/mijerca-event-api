@@ -52,14 +52,14 @@ class Paroisse
 
     #[ORM\OneToMany(mappedBy: 'paroisse', targetEntity: Person::class, cascade: ['persist', 'remove'])]
     #[Groups(['paroisse:read'])]
-    private Collection $people;
+    private Collection $person;
 
     #[ORM\ManyToOne(inversedBy: 'paroisses')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['paroisse:read', 'paroisse:write'])]
     private ?Sector $sector = null;
 
-    public function __construct() { $this->people = new ArrayCollection(); }
+    public function __construct() { $this->person = new ArrayCollection(); }
 
     // --- Getters & Setters ---
 
@@ -76,20 +76,20 @@ class Paroisse
     #[ORM\PreUpdate]
     public function setUpdatedAtValue(): void { $this->updatedAt = new \DateTimeImmutable(); }
 
-    // --- People ---
+    // --- Person ---
 
     /**
      * @return Collection<int, Person>
      */
-    public function getPeople(): Collection
+    public function getPerson(): Collection
     {
-        return $this->people;
+        return $this->person;
     }
 
     public function addPerson(Person $person): static
     {
-        if (!$this->people->contains($person)) {
-            $this->people->add($person);
+        if (!$this->person->contains($person)) {
+            $this->person->add($person);
             $person->setParoisse($this);
         }
         return $this;
@@ -97,7 +97,7 @@ class Paroisse
 
     public function removePerson(Person $person): static
     {
-        if ($this->people->removeElement($person)) {
+        if ($this->person->removeElement($person)) {
             if ($person->getParoisse() === $this) {
                 $person->setParoisse(null);
             }

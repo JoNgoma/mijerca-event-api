@@ -63,17 +63,17 @@ class Person
     #[Groups(['person:read', 'person:write'])]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'people')]
+    #[ORM\ManyToOne(inversedBy: 'person')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['person:read', 'person:write'])]
     private ?Doyenne $doyenne = null;
 
-    #[ORM\ManyToOne(inversedBy: 'people')]
+    #[ORM\ManyToOne(inversedBy: 'person')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['person:read', 'person:write'])]
     private ?Paroisse $paroisse = null;
 
-    #[ORM\ManyToOne(inversedBy: 'people')]
+    #[ORM\ManyToOne(inversedBy: 'person')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['person:read', 'person:write'])]
     private ?Sector $sector = null;
@@ -90,11 +90,14 @@ class Person
     public function setPhoneNumber(string $phoneNumber): static { $this->phoneNumber = $phoneNumber; return $this; }
     public function getFullName(): ?string { return $this->fullName; }
     public function setFullName(string $fullName): static { $this->fullName = $fullName; return $this; }
-    public function isNoyau(): ?bool { return $this->isNoyau; }
+    public function IsNoyau(): ?bool { return $this->isNoyau; }
+    public function getIsNoyau(): ?bool { return $this->isNoyau; }
     public function setIsNoyau(bool $isNoyau): static { $this->isNoyau = $isNoyau; return $this; }
-    public function isDecanal(): ?bool { return $this->isDecanal; }
+    public function IsDecanal(): ?bool { return $this->isDecanal; }
+    public function getIsDecanal(): ?bool { return $this->isDecanal; }
     public function setIsDecanal(bool $isDecanal): static { $this->isDecanal = $isDecanal; return $this; }
-    public function isDicoces(): ?bool { return $this->isDicoces; }
+    public function IsDicoces(): ?bool { return $this->isDicoces; }
+    public function getIsDicoces(): ?bool { return $this->isDicoces; }
     public function setIsDicoces(bool $isDicoces): static { $this->isDicoces = $isDicoces; return $this; }
     public function getCreatedAt(): ?\DateTimeImmutable { return $this->createdAt; }
     public function setCreatedAt(\DateTimeImmutable $createdAt): static { $this->createdAt = $createdAt; return $this; }
