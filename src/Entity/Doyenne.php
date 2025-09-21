@@ -11,6 +11,8 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: DoyenneRepository::class)]
@@ -25,6 +27,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
     normalizationContext: ['groups' => ['doyenne:read']],
     denormalizationContext: ['groups' => ['doyenne:write']]
 )]
+#[UniqueEntity(
+    fields: ['name'],
+    message: 'Ce doyenné existe déjà.'
+)]
 class Doyenne
 {
     #[ORM\Id]
@@ -33,8 +39,9 @@ class Doyenne
     #[Groups(['doyenne:read'])]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     #[Groups(['doyenne:read', 'doyenne:write'])]
+    #[Assert\NotBlank(message: "Le nom du doyenné est obligatoire.")]
     private ?string $name = null;
 
     #[ORM\Column]

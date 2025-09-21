@@ -3,11 +3,14 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use ApiPlatform\Metadata\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
@@ -17,10 +20,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: 'uuid', unique: true)]
     #[Groups(['user:read'])]
-    private ?int $id = null;
+    private ?Uuid $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
     #[Groups(['user:read', 'user:write'])]
@@ -39,7 +41,40 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\JoinColumn(nullable: false)]
     private ?Person $person = null;
 
-    public function getId(): ?int
+    /**
+     * @var Collection<int, Finance>
+     */
+    #[ORM\ManyToMany(targetEntity: Finance::class, mappedBy: 'user')]
+    private Collection $finances;
+
+    /**
+     * @var Collection<int, Administration>
+     */
+    #[ORM\ManyToMany(targetEntity: Administration::class, mappedBy: 'user')]
+    private Collection $administrations;
+
+    /**
+     * @var Collection<int, Hebergement>
+     */
+    #[ORM\ManyToMany(targetEntity: Hebergement::class, mappedBy: 'user')]
+    private Collection $hebergements;
+
+    /**
+     * @var Collection<int, Informatique>
+     */
+    #[ORM\ManyToMany(targetEntity: Informatique::class, mappedBy: 'user')]
+    private Collection $informatiques;
+
+    public function __construct()
+    {
+        $this->id = Uuid::v4(); // génère un UUID aléatoire
+        $this->finances = new ArrayCollection();
+        $this->administrations = new ArrayCollection();
+        $this->hebergements = new ArrayCollection();
+        $this->informatiques = new ArrayCollection();
+    }
+
+    public function getId(): ?Uuid
     {
         return $this->id;
     }
@@ -99,6 +134,114 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPerson(Person $person): static
     {
         $this->person = $person;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Finance>
+     */
+    public function getFinances(): Collection
+    {
+        return $this->finances;
+    }
+
+    public function addFinance(Finance $finance): static
+    {
+        if (!$this->finances->contains($finance)) {
+            $this->finances->add($finance);
+            $finance->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFinance(Finance $finance): static
+    {
+        if ($this->finances->removeElement($finance)) {
+            $finance->removeUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Administration>
+     */
+    public function getAdministrations(): Collection
+    {
+        return $this->administrations;
+    }
+
+    public function addAdministration(Administration $administration): static
+    {
+        if (!$this->administrations->contains($administration)) {
+            $this->administrations->add($administration);
+            $administration->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAdministration(Administration $administration): static
+    {
+        if ($this->administrations->removeElement($administration)) {
+            $administration->removeUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Hebergement>
+     */
+    public function getHebergements(): Collection
+    {
+        return $this->hebergements;
+    }
+
+    public function addHebergement(Hebergement $hebergement): static
+    {
+        if (!$this->hebergements->contains($hebergement)) {
+            $this->hebergements->add($hebergement);
+            $hebergement->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHebergement(Hebergement $hebergement): static
+    {
+        if ($this->hebergements->removeElement($hebergement)) {
+            $hebergement->removeUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Informatique>
+     */
+    public function getInformatiques(): Collection
+    {
+        return $this->informatiques;
+    }
+
+    public function addInformatique(Informatique $informatique): static
+    {
+        if (!$this->informatiques->contains($informatique)) {
+            $this->informatiques->add($informatique);
+            $informatique->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInformatique(Informatique $informatique): static
+    {
+        if ($this->informatiques->removeElement($informatique)) {
+            $informatique->removeUser($this);
+        }
+
         return $this;
     }
 }

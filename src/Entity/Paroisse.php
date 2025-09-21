@@ -11,6 +11,8 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ParoisseRepository::class)]
@@ -25,6 +27,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
     normalizationContext: ['groups' => ['paroisse:read']],
     denormalizationContext: ['groups' => ['paroisse:write']]
 )]
+#[UniqueEntity(
+    fields: ['name'],
+    message: 'Cette paroisse existe déjà.'
+)]
 class Paroisse
 {
     #[ORM\Id]
@@ -33,13 +39,15 @@ class Paroisse
     #[Groups(['paroisse:read'])]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     #[Groups(['paroisse:read', 'paroisse:write'])]
+    #[Assert\NotBlank(message: "Le nom de la paroisse est obligatoire.")]
     private ?string $name = null;
 
     #[ORM\ManyToOne(inversedBy: 'paroisses')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['paroisse:read', 'paroisse:write'])]
+    #[Assert\NotBlank(message: "Le nom du doyenné est obligatoire.")]
     private ?Doyenne $doyenne = null;
 
     #[ORM\Column]

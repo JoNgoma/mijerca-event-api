@@ -3,13 +3,18 @@
 namespace App\Entity;
 
 use App\Repository\PersonRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: PersonRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -23,24 +28,29 @@ use Symfony\Component\Serializer\Annotation\Groups;
     normalizationContext: ['groups' => ['person:read']],
     denormalizationContext: ['groups' => ['person:write']]
 )]
+#[UniqueEntity(
+    fields: ['phoneNumber'],
+    message: 'Ce numéro de téléphone est déjà utilisé.'
+)]
 class Person
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: 'uuid', unique: true)]
     #[Groups(['person:read'])]
-    private ?int $id = null;
+    private ?Uuid $id = null;
 
     #[ORM\Column(length: 10)]
     #[Groups(['person:read', 'person:write'])]
     private ?string $gender = null;
 
-    #[ORM\Column(length: 20)]
+    #[ORM\Column(length: 20, unique: true)]
     #[Groups(['person:read', 'person:write'])]
+    #[Assert\NotBlank(message: "Le numéro de téléphone est obligatoire.")]
     private ?string $phoneNumber = null;
 
     #[ORM\Column(length: 255)]
     #[Groups(['person:read', 'person:write'])]
+    #[Assert\NotBlank(message: "Le nom complet est obligatoire.")]
     private ?string $fullName = null;
 
     #[ORM\Column]
@@ -66,11 +76,13 @@ class Person
     #[ORM\ManyToOne(inversedBy: 'person')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['person:read', 'person:write'])]
+    #[Assert\NotBlank(message: "La selection du doyenné est obligatoire.")]
     private ?Doyenne $doyenne = null;
 
     #[ORM\ManyToOne(inversedBy: 'person')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['person:read', 'person:write'])]
+    #[Assert\NotBlank(message: "La selection de la paroisse est obligatoire.")]
     private ?Paroisse $paroisse = null;
 
     #[ORM\ManyToOne(inversedBy: 'person')]
@@ -80,10 +92,22 @@ class Person
     #[ORM\OneToOne(mappedBy: 'person', targetEntity: User::class)]
     private ?User $user = null;
 
+    /**
+     * @var Collection<int, Participator>
+     */
+    #[ORM\OneToMany(targetEntity: Participator::class, mappedBy: 'person')]
+    private Collection $participators;
+
+    public function __construct()
+    {
+        $this->id = Uuid::v4(); // génère un UUID aléatoire
+        $this->participators = new ArrayCollection();
+    }
+    
     // --- Getters & Setters ---
 
 
-    public function getId(): ?int { return $this->id; }
+    public function getId(): ?Uuid { return $this->id; }
     public function getGender(): ?string { return $this->gender; }
     public function setGender(string $gender): static { $this->gender = $gender; return $this; }
     public function getPhoneNumber(): ?string { return $this->phoneNumber; }
@@ -117,4 +141,34 @@ class Person
     public function setSector(?Sector $sector): static { $this->sector = $sector; return $this; }
     public function getUser(): ?User { return $this->user; }
     public function setUser(?User $user): static { $this->user = $user; return $this; }
+
+    /**
+     * @return Collection<int, Participator>
+     */
+    public function getParticipators(): Collection
+    {
+        return $this->participators;
+    }
+
+    public function addParticipator(Participator $participator): static
+    {
+        if (!$this->participators->contains($participator)) {
+            $this->participators->add($participator);
+            $participator->setPerson($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParticipator(Participator $participator): static
+    {
+        if ($this->participators->removeElement($participator)) {
+            // set the owning side to null (unless already changed)
+            if ($participator->getPerson() === $this) {
+                $participator->setPerson(null);
+            }
+        }
+
+        return $this;
+    }
 }
