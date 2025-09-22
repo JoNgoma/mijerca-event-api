@@ -48,6 +48,9 @@ class Participator
     #[ORM\OneToOne(mappedBy: 'participator', cascade: ['persist', 'remove'])]
     private ?Montant $montant = null;
 
+    #[ORM\Column]
+    private ?bool $badge = null;
+
     public function __construct()
     {
         $this->campBiblic = new ArrayCollection();
@@ -183,6 +186,18 @@ class Participator
         }
 
         $this->montant = $montant;
+
+        return $this;
+    }
+
+    public function isBadge(): ?bool
+    {
+        return $this->badge;
+    }
+
+    public function setBadge(bool $badge): static
+    {
+        $this->badge = $badge;
 
         return $this;
     }

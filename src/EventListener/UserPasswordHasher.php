@@ -26,15 +26,18 @@ class UserPasswordHasher
     }
 
     private function hashPassword(User $user): void
-    {
-        if ($user->getPassword() === null) {
-            return;
-        }
-
-        $hashedPassword = $this->hasher->hashPassword(
-            $user,
-            $user->getPassword()
-        );
-        $user->setPassword($hashedPassword);
+{
+    $password = $user->getPassword();
+    if ($password === null) {
+        return;
     }
+
+    // 🔹 Ne pas re-hasher si déjà hashé (commence par $2y$ pour bcrypt)
+    if (str_starts_with($password, '$2y$')) {
+        return;
+    }
+
+    $hashedPassword = $this->hasher->hashPassword($user, $password);
+    $user->setPassword($hashedPassword);
+}
 }

@@ -66,19 +66,12 @@ class CampBiblique
     #[ORM\ManyToMany(targetEntity: Montant::class, mappedBy: 'campBiblic')]
     private Collection $montants;
 
-    /**
-     * @var Collection<int, Cost>
-     */
-    #[ORM\OneToMany(targetEntity: Cost::class, mappedBy: 'campBiblic')]
-    private Collection $costs;
-
     public function __construct()
     {
         $this->id = Uuid::v4(); // génère un UUID aléatoire
         $this->participators = new ArrayCollection();
         $this->removals = new ArrayCollection();
         $this->montants = new ArrayCollection();
-        $this->costs = new ArrayCollection();
     }
 
     public function getId(): ?Uuid
@@ -307,36 +300,6 @@ class CampBiblique
     {
         if ($this->montants->removeElement($montant)) {
             $montant->removeCampBiblic($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Cost>
-     */
-    public function getCosts(): Collection
-    {
-        return $this->costs;
-    }
-
-    public function addCost(Cost $cost): static
-    {
-        if (!$this->costs->contains($cost)) {
-            $this->costs->add($cost);
-            $cost->setCampBiblic($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCost(Cost $cost): static
-    {
-        if ($this->costs->removeElement($cost)) {
-            // set the owning side to null (unless already changed)
-            if ($cost->getCampBiblic() === $this) {
-                $cost->setCampBiblic(null);
-            }
         }
 
         return $this;

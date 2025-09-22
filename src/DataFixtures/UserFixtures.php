@@ -26,7 +26,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
         $usersData = [
             [
                 'phone' => '0898464570',
-                'roles' => ['ROLE_ADMIN'],
+                'roles' => ['ROLE_ADMIN', 'ROLE_NOYAU', 'ROLE_DECANAL'],
             ],
             [
                 'phone' => '0811721417',
@@ -60,9 +60,7 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             $user = new User();
             $user->setUsername($person->getPhoneNumber());
             $user->setRoles($data['roles']);
-            $user->setPassword(
-                $this->passwordHasher->hashPassword($user, 'mijerca2025')
-            );
+            $user->setPassword( 'mijerca2025');
             $user->setPerson($person);
 
             $manager->persist($user);
