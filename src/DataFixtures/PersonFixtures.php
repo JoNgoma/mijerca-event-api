@@ -19,7 +19,7 @@ class PersonFixtures extends Fixture implements DependentFixtureInterface
         $paroisseRepo = $manager->getRepository(Paroisse::class);
 
         // 🔹 Récupération des références
-        $sector = $sectorRepo->findOneBy(['name' => 'KIN EST']);
+        $sector = $sectorRepo->findOneBy(['name' => 'KIN OUEST']);
         $doyenne = $doyenneRepo->findOneBy(['name' => 'Saint Noé Mawaggali']);
         $paroisse = $paroisseRepo->findOneBy(['name' => 'Paroisse Saint Noé Mawaggali']);
 
@@ -35,28 +35,28 @@ class PersonFixtures extends Fixture implements DependentFixtureInterface
                 'phoneNumber' => '0898464570',
                 'gender' => 'Frère',
                 'isDicoces' => false,
-                'isDecanal' => false,
-                'isNoyau' => false,
+                'isDecanal' => true,
+                'isNoyau' => true,
             ],
             [
                 'fullName' => 'Divine Kangala',
                 'phoneNumber' => '0811721417',
                 'gender' => 'Soeur',
-                'isDicoces' => true,
-                'isDecanal' => true,
-                'isNoyau' => true,
+                'isDicoces' => false,
+                'isDecanal' => false,
+                'isNoyau' => false,
             ],
             [
                 'fullName' => 'Bénie Kangala',
-                'phoneNumber' => '0811721418',
+                'phoneNumber' => '0816477209',
                 'gender' => 'Soeur',
                 'isDicoces' => false,
-                'isDecanal' => true,
+                'isDecanal' => false,
                 'isNoyau' => true,
             ],
             [
                 'fullName' => 'Chadrack Aasa',
-                'phoneNumber' => '0811721419',
+                'phoneNumber' => '0995879846',
                 'gender' => 'Frère',
                 'isDicoces' => false,
                 'isDecanal' => false,

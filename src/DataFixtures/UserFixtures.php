@@ -30,14 +30,14 @@ class UserFixtures extends Fixture implements DependentFixtureInterface
             ],
             [
                 'phone' => '0811721417',
-                'roles' => ['ROLE_NOYAU', 'ROLE_DECANAL', 'ROLE_DIOCESE'],
+                'roles' => ['ROLE_USER'],
             ],
             [
-                'phone' => '0811721418',
-                'roles' => ['ROLE_NOYAU', 'ROLE_DECANAL'],
+                'phone' => '0816477209',
+                'roles' => ['ROLE_NOYAU'],
             ],
             [
-                'phone' => '0811721419',
+                'phone' => '0995879846',
                 'roles' => ['ROLE_NOYAU'],
             ],
         ];

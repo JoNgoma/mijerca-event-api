@@ -103,7 +103,7 @@ class Person
         $this->id = Uuid::v4(); // génère un UUID aléatoire
         $this->participators = new ArrayCollection();
     }
-    
+
     // --- Getters & Setters ---
 
 
