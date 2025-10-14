@@ -44,24 +44,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Finance>
      */
+    #[Groups(['user:read', 'user:write'])]
     #[ORM\ManyToMany(targetEntity: Finance::class, mappedBy: 'user')]
     private Collection $finances;
 
     /**
      * @var Collection<int, Administration>
      */
+    #[Groups(['user:read', 'user:write'])]
     #[ORM\ManyToMany(targetEntity: Administration::class, mappedBy: 'user')]
     private Collection $administrations;
 
     /**
      * @var Collection<int, Hebergement>
      */
+    #[Groups(['user:read', 'user:write'])]
     #[ORM\ManyToMany(targetEntity: Hebergement::class, mappedBy: 'user')]
     private Collection $hebergements;
 
     /**
      * @var Collection<int, Informatique>
      */
+    #[Groups(['user:read', 'user:write'])]
     #[ORM\ManyToMany(targetEntity: Informatique::class, mappedBy: 'user')]
     private Collection $informatiques;
 

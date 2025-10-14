@@ -8,10 +8,16 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CampBibliqueRepository::class)]
 #[ApiResource]
+#[UniqueEntity(
+    fields: ['name'],
+    message: 'Il existe déjà une activité pareille pour cette année'
+)]
 class CampBiblique
 {
     #[ORM\Id]
@@ -19,6 +25,7 @@ class CampBiblique
     private ?Uuid $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
@@ -57,7 +64,7 @@ class CampBiblique
     #[ORM\ManyToMany(targetEntity: Removal::class, mappedBy: 'campBiblic')]
     private Collection $removals;
 
-    #[ORM\OneToOne(mappedBy: 'campBiblic', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(mappedBy: 'cb', cascade: ['persist', 'remove'])]
     private ?Logistic $logistic = null;
 
     /**

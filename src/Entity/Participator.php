@@ -55,6 +55,8 @@ class Participator
     {
         $this->campBiblic = new ArrayCollection();
         $this->removals = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable();
+        $this->updatedAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -122,29 +124,16 @@ class Participator
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
+    public function getCreatedAt(): ?\DateTimeImmutable { return $this->createdAt; }
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static { $this->createdAt = $createdAt; return $this; }
+    public function getUpdatedAt(): ?\DateTimeImmutable { return $this->updatedAt; }
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): static { $this->updatedAt = $updatedAt; return $this; }
+    #[ORM\PrePersist]
+    public function setCreatedAtValue(): void
+    { $this->createdAt = new \DateTimeImmutable(); $this->updatedAt = new \DateTimeImmutable(); }
+    #[ORM\PreUpdate]
+    public function setUpdatedAtValue(): void
+    { $this->updatedAt = new \DateTimeImmutable(); }
 
     /**
      * @return Collection<int, Removal>
